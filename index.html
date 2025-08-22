@@ -1,11 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gelatos Avelãs</title>
+    <title>Personagens</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            font-family: Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            width: 100%;
+            height: 10vh;
+            background: #F8BE12 url("download-removebg-preview.png") no-repeat center center;
+            background-size: contain;
+        }
+
+        .container-flex {
+            width: 100%;
+            height: 90vh;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .container-flex__sakmoto,
+        .container-shin,
+        .container-lu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 33.3%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .container-flex__sakmoto {
+            background-color: #F8BE12;
+        }
+
+        .container-shin {
+            background-color: #3A76B4;
+        }
+
+        .container-lu {
+            background-color: #E899AF;
+        }
+
+        .container-flex img {
+            max-width: 100%;
+            height: auto;
+            max-width: 236px;
+            height: 404px;
+        }
+
+        .container-grid__all-sec {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            justify-items: center;
+            padding: 20px;
+        }
+
+       /* Sections de informações */
+.container-flex__sakmoto-sec,
+.container-flex__sakmoto-shin-sec,
+.container-flex__lu-sec {
+    display: none; /* continua escondido por padrão */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container-flex__sakmoto-sec:hover,
+.container-flex__sakmoto-shin-sec:hover,
+.container-flex__lu-sec:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.container-flex__all-sec-img {
+    width: 160px; /* ligeiro aumento */
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 20px;
+    transition: transform 0.3s ease;
+}
+
+.container-flex__all-sec-img:hover {
+    transform: scale(1.05);
+}
+
+.all-sec-info h1 {
+    font-size: 1.8rem;
+    color: #222;
+    margin-bottom: 12px;
+}
+
+.all-sec-info p {
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: #000000;
+}
+
+.all-sec-buttom button {
+    background-color: #222;
+    color: #fff;
+    padding: 20px 60px; /* ajustado para ficar proporcional */
+    font-size: 1.5rem; /* maior tipografia */
+    min-width: 200px; /* largura mínima */
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* leve sombra */
+    transition: all 0.3s ease;
+}
+
+.all-sec-buttom button:hover {
+    background-color: #444;
+    transform: translateY(-3px); /* leve elevação ao passar o mouse */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3); /* sombra maior no hover */
+}
+
+
+/* Cores de destaque nos fundos mantendo layout original */
+.container-flex__sakmoto-sec {
+    background-color: #F8BE12; /* Sakamoto */
+}
+
+.container-flex__sakmoto-shin-sec {
+    background-color: #3A76B4; /* Shin */
+    color: #fff;
+}
+
+.container-flex__lu-sec {
+    background-color: #E899AF; /* Lu */
+    color: #fff;
+}
+
+
+        .container-flex__all-sec-img {
+            width: 250px;
+            height: 250px;
+        }
+
+        .all-sec-info h1 {
+            margin-bottom: 10px;
+            font-size: 3em;
+        }
+
+        /*Opacidade*/
+
+        .personagem img {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .personagem.selected img {
+            transform: scale(1.2);
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .personagem.not-selected img {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+
+        .personagem {
+            cursor: pointer;
+        }
+
+        .personagem img {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .personagem.selected img {
+            transform: scale(1.2);
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .personagem.not-selected img {
+            opacity: 0.5;
+            transform: scale(1);
+        }
+        /* Sections de informações */
+/* Estilo do Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999; /* maior que o personagem */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+  padding-top: 60px;
+}
+
+
+.modal-content {
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#modal-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+#modal-link:hover {
+  background-color: #0056b3;
+}
+
+    </style>
 </head>
+
 <body>
-    <!-- Pensem num site de sorvete, com uma base de dados via api que vai carregar o conteudo -->
+    <header></header>
+
+    <!-- Personagens -->
+    <main class="container-flex">
+        <section id="personagem-sakamoto" class="container-flex__sakmoto personagem">
+            <img src="68e09cc3d7b1785db865f5ee76639729-removebg-preview.png" alt="">
+        </section>
+        <section id="personagem-shin" class="container-shin personagem">
+            <img src="86abf1cee5d9af53b4f38badfcadf49d-removebg-preview.png" alt="">
+        </section>
+        <section id="personagem-lu" class="container-lu personagem">
+            <img src="1c47c1d78d93150db2804680c65758e0-removebg-preview.png" alt="">
+        </section>
+    </main>
+
+    <!-- Dentro de cada seção de info, ajuste o botão data-personagem -->
+<section id="info-sakamoto" class="container-flex__sakmoto-sec container-grid__all-sec">
+    <img class="container-flex__all-sec-img" src="Taro_Sakamoto_Portrait.webp" alt="Sakamoto">
+    <div class="all-sec-info">
+        <h1>Sakamoto</h1>
+        <p>
+            Taro Sakamoto é um ex-assassino lendário que decidiu abandonar a vida do crime 
+            para se tornar um pacato dono de mercearia. Apesar de aposentado, ele ainda 
+            possui reflexos, força e inteligência acima do normal, o que o torna temido 
+            até pelos inimigos mais poderosos. Sua vida tranquila, porém, vive sendo 
+            ameaçada por seu passado.
+        </p>
+    </div>
+    <div class="all-sec-buttom">
+        <button class="modal-btn" data-personagem="sakamoto">Veja mais+</button>
+    </div>
+</section>
+
+<section id="info-shin" class="container-flex__sakmoto-shin-sec container-grid__all-sec">
+    <img class="container-flex__all-sec-img" src="Image-23.jpg" alt="Shin">
+    <div class="all-sec-info">
+        <h1>Shin</h1>
+        <p>
+            Shin é um jovem com habilidades telepáticas que trabalha ao lado de Sakamoto. 
+            Determinado e de personalidade explosiva, ele acredita na justiça e procura 
+            sempre proteger aqueles que ama. Com sua mente afiada e sua lealdade, Shin 
+            se tornou um dos aliados mais confiáveis de Sakamoto.
+        </p>
+    </div>
+    <div class="all-sec-buttom">
+       <button class="modal-btn" data-personagem="shin">Veja mais+</button>
+    </div>
+</section>
+
+<section id="info-lu" class="container-flex__lu-sec container-grid__all-sec">
+    <img class="container-flex__all-sec-img" src="Image-22.jpg" alt="Lu">
+    <div class="all-sec-info">
+        <h1>Lu</h1>
+        <p>
+            Lu é uma lutadora habilidosa com personalidade calma e estratégica. 
+            Ela possui grande domínio em artes marciais e é conhecida por sua 
+            inteligência tática durante batalhas. Apesar de parecer fria, é 
+            extremamente protetora com seus amigos e se tornou essencial para a 
+            equipe de Sakamoto.
+        </p>
+    </div>
+    <div class="all-sec-buttom">
+        <button class="modal-btn" data-personagem="lu">Veja mais+</button>
+    </div>
+</section>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span id="modal-close" class="modal-close">&times;</span>
+    <h2 id="modal-title"></h2>
+    <p id="modal-description"></p>
+    <a id="modal-link" href="#" target="_blank">Leia mais na Wiki</a>
+  </div>
+</div>
+
+
+<script>
+  // Mapeamento personagem -> seção de informações
+  const personagemInfoMap = {
+    'personagem-sakamoto': 'info-sakamoto',
+    'personagem-shin': 'info-shin',
+    'personagem-lu': 'info-lu'
+  };
+
+  const infoSections = Object.values(personagemInfoMap).map(id => document.getElementById(id));
+  const personagemElements = Object.keys(personagemInfoMap).map(id => document.getElementById(id));
+
+  // Função para esconder todas as seções de informação
+  function esconderInfos() {
+    infoSections.forEach(sec => sec.style.display = 'none');
+  }
+
+  // Dados dos personagens para o modal
+  const personagens = {
+    sakamoto: {
+      nome: "Taro Sakamoto",
+      descricao: "Taro Sakamoto é um ex-assassino lendário que abandonou sua vida de violência para viver uma vida tranquila com sua família.",
+      wiki: "https://sakamoto-days.fandom.com/wiki/Taro_Sakamoto",
+      img: "Taro_Sakamoto_Portrait.webp"
+    },
+    shin: {
+      nome: "Shin Asakura",
+      descricao: "Shin Asakura, também conhecido como Clairvoyant, é um ex-assassino e ex-parceiro de Taro Sakamoto. Ele possui habilidades psíquicas e busca redenção.",
+      wiki: "https://sakamoto-days.fandom.com/wiki/Shin_Asakura",
+      img: "Image-23.jpg"
+    },
+    lu: {
+      nome: "Lu Shaotang",
+      descricao: "Lu Shaotang é filha de uma família da máfia chinesa e trabalha na loja de Sakamoto. Ela possui habilidades de combate misturando Tai Chi e Drunken Fist.",
+      wiki: "https://sakamoto-days.fandom.com/wiki/Lu_Shaotang",
+      img: "Image-22.jpg"
+    }
+  };
+
+  // Modal
+  const modal = document.getElementById('modal');
+  const modalClose = document.getElementById('modal-close');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDescription = document.getElementById('modal-description');
+  const modalLink = document.getElementById('modal-link');
+
+  // Criar img dentro do modal dinamicamente
+  let modalImg = document.createElement('img');
+  modalImg.style.width = '200px';
+  modalImg.style.height = 'auto';
+  modalImg.style.display = 'block';
+  modalImg.style.marginBottom = '15px';
+  const modalContent = document.querySelector('.modal-content');
+  modalContent.insertBefore(modalImg, modalTitle);
+
+  // Clique nos personagens
+  personagemElements.forEach(personagemEl => {
+    personagemEl.addEventListener('click', () => {
+      // Mostra seção de info correspondente
+      esconderInfos();
+      const infoEl = document.getElementById(personagemInfoMap[personagemEl.id]);
+      infoEl.style.display = 'grid';
+
+      // Rolagem suave
+      const headerHeight = 0;
+      const y = infoEl.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+
+      // Seleção visual
+      document.querySelectorAll('.personagem').forEach(other => {
+        other.classList.remove('selected', 'not-selected');
+      });
+      personagemEl.classList.add('selected');
+      document.querySelectorAll('.personagem').forEach(other => {
+        if (other !== personagemEl) other.classList.add('not-selected');
+      });
+    });
+  });
+
+  // Botões para abrir modal
+  document.querySelectorAll('.modal-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const personagem = personagens[button.dataset.personagem];
+      modalTitle.textContent = personagem.nome;
+      modalDescription.textContent = personagem.descricao;
+      modalLink.href = personagem.wiki;
+      modalImg.src = personagem.img;
+      modal.style.display = 'block';
+    });
+  });
+
+  // Fechar modal
+  modalClose.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+  window.addEventListener('click', (event) => {
+    if (event.target === modal) modal.style.display = 'none';
+  });
+
+  // Esconder todas as seções no início
+  esconderInfos();
+</script>
+
 </body>
+
 </html>
